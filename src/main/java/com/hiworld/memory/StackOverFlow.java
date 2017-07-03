@@ -17,6 +17,13 @@ public class StackOverFlow {
     
     public static void add(int count) {
         System.out.println("count : " + count);
-        add(count+1);
+        if(count == 12000) {
+            try {
+                Thread.sleep(100000l);
+            } catch (InterruptedException e) {
+            }
+        } else {
+            add(count+1);
+        }
     }
 }
