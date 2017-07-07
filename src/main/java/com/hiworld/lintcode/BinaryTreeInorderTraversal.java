@@ -7,9 +7,9 @@ import java.util.Stack;
 import com.hiworld.lintcode.common.TreeNode;
 
 /**
- * 二叉树的"中序遍历"
+ * 二叉树的"中序遍历"(不管是前序,中序,后序都是针对根结点的而言的)
  * 
- * 先左子树，后根节点，再右子树
+ * 左子树->根节点->右子树
  * 
  * 样例：
  *      1
