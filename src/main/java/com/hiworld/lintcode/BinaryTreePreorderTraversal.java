@@ -2,6 +2,7 @@ package com.hiworld.lintcode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import com.hiworld.lintcode.common.TreeNode;
 
@@ -48,7 +49,8 @@ public class BinaryTreePreorderTraversal {
         }
         
         ArrayList<Integer> result = new ArrayList<>();
-        withRecursion(root, result);
+//        withRecursion(root, result);
+        withOutRecursion(root, result);
         return result;
     }
     
@@ -77,9 +79,22 @@ public class BinaryTreePreorderTraversal {
     
     /**
      * 非递归方式
-     * @return
+     * @param node
+     * @param result
      */
     public void withOutRecursion(TreeNode node, List<Integer> result) {
-        
+        Stack<TreeNode> stack = new Stack<>();
+        while(stack.size() != 0 || null!=node) {
+            if(null!=node) {
+                TreeNode rightNode = node.right; 
+                result.add(node.val); //打印当前结点
+                node = node.left; //遍历当前结点的左结点
+                if(null!=rightNode) {//只要有右结点都会push到栈中
+                    stack.push(rightNode);
+                }
+            } else {
+                node = stack.pop(); //如果遍历到叶子结点了,那么就从栈中pop出来一个(右)结点进行遍历
+            }
+        }
     }
 }

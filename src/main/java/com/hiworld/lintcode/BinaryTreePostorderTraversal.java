@@ -1,6 +1,8 @@
 package com.hiworld.lintcode;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Stack;
 
 import com.hiworld.lintcode.common.TreeNode;
 
@@ -29,8 +31,12 @@ public class BinaryTreePostorderTraversal {
         TreeNode node2 = new TreeNode(2);
         TreeNode node3 = new TreeNode(3);
         
-        node1.left = node2;
-        node1.right = node3;
+//        node1.left = node2;
+//        node1.right = node3;
+        
+        node1.right = node2;
+        node2.left = node3;
+        
         
         BinaryTreePostorderTraversal binaryTreePostorderTraversal = new BinaryTreePostorderTraversal();
         ArrayList<Integer> result = binaryTreePostorderTraversal.postorderTraversal(node1);
@@ -52,6 +58,7 @@ public class BinaryTreePostorderTraversal {
         
         ArrayList<Integer> result = new ArrayList<>();
         withRecursion(root, result);
+//        withOutRecursion(root, result);
         return result;
     }
     
@@ -82,9 +89,43 @@ public class BinaryTreePostorderTraversal {
     
     /**
      * 非递归方式
+     * @param node
+     * @param result
      * @return
      */
-    public ArrayList<Integer> withOutRecursion() {
-        return null;
+    public void withOutRecursion(TreeNode node, ArrayList<Integer> result) {
+        
+        Stack<TreeNode> stack = new Stack<>();
+        HashSet<TreeNode> hasVisit = new HashSet<>(); //存放已经访问过得结点
+        
+        TreeNode leftNode = null;
+        TreeNode rightNode = null;
+        
+        while(0!=stack.size() || null!=node) {
+            if(null!=node) {
+                leftNode = node.left; //左结点
+                rightNode = node.right; //右结点
+                
+                if(null == leftNode && null == rightNode) {
+                    hasVisit.add(node);
+                    result.add(node.val);
+                    node = null;
+                } else {
+                    if(!hasVisit.contains(leftNode) && !hasVisit.contains(rightNode)) { //如果该结点的左右结点都访问过,那么直接访问该结点,不然将当前结点和他的右结点压栈
+                        stack.push(node);
+                        if(null!=rightNode) {
+                            stack.push(rightNode);
+                        }
+                        node = leftNode;
+                    } else {
+                        hasVisit.add(node);
+                        result.add(node.val);
+                        node = null;
+                    }
+                }
+            } else {
+                node = stack.pop();
+            }
+        }
     }
 }
