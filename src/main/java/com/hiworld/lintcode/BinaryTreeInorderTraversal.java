@@ -95,6 +95,10 @@ public class BinaryTreeInorderTraversal {
     
     /**
      * 采用非递归的方式,进行"中序遍历"
+     * 想法：
+     * 不停的遍历left结点，把根结点都压栈，直到left结点为null了,那么pop结点出来，把该结点进行打印
+     * 然后再处理这个pop出来的结点的右结点
+     * 
      * @param root
      * @return
      */
@@ -112,16 +116,10 @@ public class BinaryTreeInorderTraversal {
             if(null == node) { //node为null是一个出栈的过程
                 TreeNode popNode = stack.pop();
                 retList.add(popNode.val); //先把pop出来的结点添加到返回列表中(中)
-                TreeNode rightNode = popNode.right; //处理pop出来的结点的右结点
-                node = rightNode;
+                node = popNode.right; //处理pop出来的结点的右结点
             } else { //node非null是一个压栈的过程
                 stack.push(node); //首先将结点压栈
-                TreeNode leftNode = node.left;
-                if(null!=leftNode) { //左结点不为空,准备继续遍历左结点
-                    node = leftNode;
-                } else {
-                    node = null;
-                }
+                node = node.left; //准备继续遍历左结点
             }
         }
         
