@@ -29,7 +29,7 @@ public class ListDelNode {
         ListDelNode listDelNode = new ListDelNode();
         listDelNode.deleteNode(node13);
         
-        System.out.println(ListNode.print(node11));
+        ListNode.print(node11);
     }
     
     /**

@@ -5,9 +5,9 @@ public class ListNode {
     public ListNode next;
     public ListNode(int x) { val = x; }
     
-    public static String print(ListNode node) {
+    public static void print(ListNode node) {
         if(null == node) {
-            return null;
+            System.out.println("NULL");
         }
         
         StringBuilder sb = new StringBuilder();
@@ -19,6 +19,6 @@ public class ListNode {
             node = node.next;
         }
         
-        return sb.toString();
+        System.out.println(sb.toString());
     }
 }
