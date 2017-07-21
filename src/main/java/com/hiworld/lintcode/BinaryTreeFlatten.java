@@ -1,7 +1,5 @@
 package com.hiworld.lintcode;
 
-import java.util.ArrayList;
-
 import com.hiworld.lintcode.common.TreeNode;
 
 /**
@@ -40,6 +38,7 @@ public class BinaryTreeFlatten {
         node5.right = node6;
         
         BinaryTreeFlatten binaryTreeFlatten = new BinaryTreeFlatten();
+        
         binaryTreeFlatten.flatten(node1);
         System.out.println("lintcode...");
     }
@@ -54,24 +53,65 @@ public class BinaryTreeFlatten {
             return;
         }
         
-        //TODO
-        
-    }
-    
-    public void doFlatten(TreeNode node) {
-        
+        root = flattenWithRecusion(root, null);
     }
     
     /**
-     * 判断是不是叶子结点
+     * 递归实现
      * @param node
-     * @return
+     * @param head
      */
-    public boolean isLeaf(TreeNode node) {
-        if(null==node.left && null==node.right) {
-            return true;
+    public TreeNode flattenWithRecusion(TreeNode node, TreeNode head) {
+        TreeNode leftTree = node.left;
+        TreeNode rightTree = node.right;
+        
+        clearNode(node); //获取到一个结点,先把这个结点的左右孩子清除,避免混乱
+        if(null==head) {
+            head = node;
+        } else {
+            appendRight(head, node); //将元素遍历到返回列表的末尾,在末尾添加新的结点
         }
         
-        return false;
+        if(null!=leftTree) {
+            flattenWithRecusion(leftTree, node);
+        }
+        
+        if(null!=rightTree) {
+            flattenWithRecusion(rightTree, node);
+        }
+        
+        return head; //最后将head返回出去
+    }
+    
+    /**
+     * 非递归实现
+     * @param node
+     * @param head
+     * @return
+     */
+    public TreeNode flattenWithOutRecusion(TreeNode node, TreeNode head) {
+        //TODO
+        return null;
+    }
+    
+    /**
+     * 清空node的左右结点
+     * @param node
+     */
+    public void clearNode(TreeNode node) {
+        node.left = null;
+        node.right = null;
+    }
+    
+    /**
+     * 
+     * @param node
+     */
+    public void appendRight(TreeNode tree, TreeNode node) {
+        while(null!=tree.right) {
+            tree = tree.right;
+        }
+        
+        tree.right = node;
     }
 }
