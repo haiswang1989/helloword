@@ -62,4 +62,39 @@ public class AVLTreeNode {
     public boolean isLeaf() {
         return null==this.getLeftTree() && null==this.getRightTree();
     }
+    
+    @Override
+    public String toString() {
+        return value + "";
+    }
+    
+    /**
+     * 重置高度
+     */
+    public void resetHeight() {
+        int leftHeight = 0;
+        int rightHeight = 0;
+        AVLTreeNode leftNode = getLeftTree();
+        AVLTreeNode rightNode = getRightTree();
+        
+        leftHeight = leftNode == null ? -1 : leftNode.getHeight();
+        rightHeight = rightNode == null ? -1 : rightNode.getHeight();
+        
+        setHeight(Math.max(leftHeight, rightHeight) + 1);
+    }
+    
+    /**
+     * 重置节点BF
+     */
+    public void resetBF() {
+        int leftHeight = 0;
+        int rightHeight = 0;
+        AVLTreeNode leftNode = getLeftTree();
+        AVLTreeNode rightNode = getRightTree();
+        
+        leftHeight = leftNode == null ? 0 : leftNode.getHeight() + 1;
+        rightHeight = rightNode == null ? 0 : rightNode.getHeight() + 1;
+        
+        setBf(leftHeight - rightHeight);
+    }
 }

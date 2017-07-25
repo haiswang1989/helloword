@@ -155,32 +155,46 @@ public class AVLTree {
     
     /**
      * 
-     * @param imbalanceNode
+     * 获取不平衡状态类型
+     * @param imbalanceNode 不平衡的结点
      * @return
      */
     public ImbalanceType imbalanceType(AVLTreeNode imbalanceNode) {
-        int imbalanceBF = imbalanceNode.getBf();
-        int childBF = 0;
-        if (imbalanceBF < 0) {
-            childBF = imbalanceNode.getRightTree().getBf();
-            if (childBF < 0) {
-                return ImbalanceType.RR;
-            } else if (childBF > 0) {
+        //TODO BUG
+        int bf = imbalanceNode.getBf();
+        if(bf > 0) { //LL OR LR
+            AVLTreeNode leftTree = imbalanceNode.getLeftTree();
+            
+            AVLTreeNode leftTreeLeftChild = leftTree.getLeftTree();
+            AVLTreeNode leftTreeRightChild = leftTree.getRightTree();
+            
+            int leftTreeLeftChildHeight = null==leftTreeLeftChild ? 0 : leftTreeLeftChild.getHeight() + 1;
+            int leftTreeRightChildHeight = null==leftTreeRightChild ? 0 : leftTreeRightChild.getHeight() + 1;
+            
+            if(leftTreeLeftChildHeight > leftTreeRightChildHeight) {
+                return ImbalanceType.LL;
+            } else { 
+                return ImbalanceType.LR;
+            }
+        } else { //RR OR RL
+            AVLTreeNode rightTree = imbalanceNode.getRightTree();
+            
+            AVLTreeNode rightTreeLeftChild = rightTree.getLeftTree();
+            AVLTreeNode rightTreeRightChild = rightTree.getRightTree();
+            
+            int rightTreeLeftChildHeight = null==rightTreeLeftChild ? 0 : rightTreeLeftChild.getHeight() + 1;
+            int rightTreeRightChildHeight = null==rightTreeRightChild ? 0 : rightTreeRightChild.getHeight() + 1;
+            
+            if(rightTreeLeftChildHeight > rightTreeRightChildHeight) {
                 return ImbalanceType.RL;
             } else {
-                return ImbalanceType.BALANCE;
+                return ImbalanceType.RR;
             }
-        } else if (imbalanceBF > 0) {
-            childBF = imbalanceNode.getLeftTree().getBf();
-            if (childBF < 0) {
-                return ImbalanceType.LR;
-            } else if (childBF > 0) {
-                return ImbalanceType.LL;
-            } else {
-                return ImbalanceType.BALANCE;
-            }
-        } else {
-            return ImbalanceType.BALANCE;
         }
+    }
+    
+    public void setRoot(AVLTreeNode root) {
+        root.setParent(null);
+        this.root = root;
     }
 }
