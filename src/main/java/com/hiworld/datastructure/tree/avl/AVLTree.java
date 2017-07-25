@@ -160,7 +160,6 @@ public class AVLTree {
      * @return
      */
     public ImbalanceType imbalanceType(AVLTreeNode imbalanceNode) {
-        //TODO BUG
         int bf = imbalanceNode.getBf();
         if(bf > 0) { //LL OR LR
             AVLTreeNode leftTree = imbalanceNode.getLeftTree();

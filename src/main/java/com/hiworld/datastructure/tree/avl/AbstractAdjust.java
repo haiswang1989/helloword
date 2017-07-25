@@ -43,7 +43,7 @@ public abstract class AbstractAdjust implements IAdjust {
     /**
      * 重置高度
      * @param node
-     * @param needDepthReset
+     * @param needDepthReset 是否需要递归重置,就是不停的往上遍历,重新计算父亲结点的bf,当在下面添加了结点以后,就需要递归重置
      */
     public void resetHeight(AVLTreeNode node, boolean needDepthReset) {
         if(null == node) {
@@ -63,7 +63,7 @@ public abstract class AbstractAdjust implements IAdjust {
     /**
      * 重置bf
      * @param node
-     * @param needDepthReset
+     * @param needDepthReset 是否需要递归重置,就是不停的往上遍历,重新计算父亲结点的bf,当在下面添加了结点以后,就需要递归重置
      */
     public void resetBf(AVLTreeNode node, boolean needDepthReset) {
         if(null == node) {
