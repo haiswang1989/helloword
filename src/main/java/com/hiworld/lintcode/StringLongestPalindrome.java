@@ -19,6 +19,7 @@ public class StringLongestPalindrome {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
+        //NTrQdQGgwtxqRTSBOitAXUkwGLgUHtQOmYMwZlUxqZysKpZxRoehgirdMUgy
         String s = "NTrQdQGgwtxqRTSBOitAXUkwGLgUHtQOmYMwZlUxqZysKpZxRoehgirdMUgy";
         StringLongestPalindrome stringLongestPalindrome = new StringLongestPalindrome();
         System.out.println(stringLongestPalindrome.longestPalindrome(s));
@@ -30,9 +31,6 @@ public class StringLongestPalindrome {
      */
     public int longestPalindrome(String s) {
         // Write your code here
-        
-        //TODO 代码测试不过
-        
         if(null==s || 0==s.length()) {
             return 0;
         }
@@ -50,17 +48,23 @@ public class StringLongestPalindrome {
         int maxUnevenNum = 0; //最大的奇数
         
         for (Map.Entry<Character, Integer> entry : charCount.entrySet()) {
-            System.out.println(entry.getKey() + ":" + entry.getValue());
             int count = entry.getValue();
-            if(count % 2 == 0) {
+            if(count % 2 == 0) { //如果是偶数可以直接用来构造回文串
                 evenNumCount += count;
-            } else {
-                maxUnevenNum = Math.max(maxUnevenNum, count);
+            } else { 
+                if(maxUnevenNum < count) { //如果是奇数,那么可以把当前的奇数-1后的count,来构造回文
+                    if(0!=maxUnevenNum) { //可以留下一个最长的奇数,然后其他小于或等于该最长的奇数,统一减去1来构造回文
+                        evenNumCount += (maxUnevenNum-1);
+                    }
+                    maxUnevenNum = count;
+                } else {
+                    evenNumCount += (count-1);
+                }
             }
         }
         
         
-        return evenNumCount + maxUnevenNum;
+        return evenNumCount + maxUnevenNum; //加上最长奇数
     }
 
 }
