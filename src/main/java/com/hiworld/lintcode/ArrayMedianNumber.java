@@ -16,7 +16,39 @@ public class ArrayMedianNumber {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-
+        
     }
-
+    
+    /**
+     * @param nums: A list of integers.
+     * @return: An integer denotes the middle number of the array.
+     */
+    public int median(int[] nums) {
+        // write your code here
+        if(null==nums || 0==nums.length) {
+            return 0;
+        }
+        
+        int length = nums.length;
+        
+        int K = 0;
+        if(length % 2 == 0) {
+            K = length / 2; 
+        } else {
+            K = (length / 2) + 1;
+        }
+        
+        return kElement(nums, K);
+    }
+    
+    /**
+     * 获取第K大元素
+     * @param nums
+     * @param K
+     * @return
+     */
+    public int kElement(int[] nums, int K) {
+        int[] newNums = new int[K]; 
+        return newNums[K];
+    }
 }
