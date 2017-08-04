@@ -5,9 +5,10 @@ public class ListNode {
     public ListNode next;
     public ListNode(int x) { val = x; }
     
+    
     @Override
     public String toString() {
-        return val + "";
+        return val + " : " + hashCode();
     }
     
     public static void print(ListNode node) {

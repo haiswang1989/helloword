@@ -16,7 +16,10 @@ public class ArrayMedianNumber {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        
+        int ary[] = {-4,5,-4,5,-4,5,-4,5,-4,5,-4,5,-4,5,-4,5,-4,5,-1000};
+        ArrayMedianNumber arrayMedianNumber = new ArrayMedianNumber();
+        int ret = arrayMedianNumber.median(ary);
+        System.out.println("ret : " + ret);
     }
     
     /**
@@ -25,30 +28,65 @@ public class ArrayMedianNumber {
      */
     public int median(int[] nums) {
         // write your code here
-        if(null==nums || 0==nums.length) {
+        int length = -1;
+        if(null==nums || 0==(length=nums.length)) {
             return 0;
         }
         
-        int length = nums.length;
-        
-        int K = 0;
-        if(length % 2 == 0) {
-            K = length / 2; 
-        } else {
-            K = (length / 2) + 1;
-        }
-        
-        return kElement(nums, K);
+        int medianIndex = (length + 1) / 2 - 1; //中位数在数组中的位置
+        return medianWithRecusion(nums, 0, nums.length-1, medianIndex);
     }
     
     /**
-     * 获取第K大元素
+     * 快速排序的思想
      * @param nums
-     * @param K
+     * @param startIndex
+     * @param endIndex
+     * @param medianIndex
      * @return
      */
-    public int kElement(int[] nums, int K) {
-        int[] newNums = new int[K]; 
-        return newNums[K];
+    public int medianWithRecusion(int[] nums, int startIndex, int endIndex, int medianIndex) {
+        int ret = 0;
+        if(startIndex == endIndex) { //如果数组只有一个元素了,那么中位数就是这个唯一的元素
+            ret = nums[startIndex];
+        }
+        
+        if(startIndex < endIndex) {
+            int i = startIndex;
+            int j = endIndex;
+            int standard = nums[i];
+            int standardIndex = i;
+            
+            while(i < j) {
+                while(j > i && nums[j] >= standard) {
+                    j--;
+                }
+                
+                if(j > i) {
+                    nums[standardIndex] = nums[j];
+                    standardIndex = j;
+                }
+                
+                while(i < j && nums[i] < standard) {
+                    i++;
+                }
+                
+                if(i < j) {
+                    nums[standardIndex] = nums[i];
+                    standardIndex = i;
+                }
+            }
+            
+            nums[standardIndex] = standard;
+            if(standardIndex == medianIndex) { //如果基数就在中位数的位置,那么直接返回基数
+                ret = standard;
+            } else if(standardIndex < medianIndex) { //在基数的左边
+                ret = medianWithRecusion(nums, standardIndex+1, endIndex, medianIndex);
+            } else { //在基数的右边
+                ret = medianWithRecusion(nums, startIndex, standardIndex-1, medianIndex);
+            }
+        }
+        
+        return ret;
     }
 }
