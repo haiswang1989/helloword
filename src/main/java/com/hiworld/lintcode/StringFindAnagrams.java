@@ -1,5 +1,6 @@
 package com.hiworld.lintcode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,7 +25,12 @@ public class StringFindAnagrams {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
+        String s = "aaaa";
+        String p = "a";
         
+        StringFindAnagrams stringFindAnagrams = new StringFindAnagrams();
+        List<Integer> ret = stringFindAnagrams.findAnagrams(s, p);
+        System.out.println(ret.toString());
     }
     
     /**
@@ -36,26 +42,69 @@ public class StringFindAnagrams {
      */
     public List<Integer> findAnagrams(String s, String p) {
         // Write your code here
-        
-        int pLength = p.length();
-        HashMap<Character, Integer> cIndexMap = new HashMap<>();
-        int index = 0;
-        for (char c : p.toCharArray()) {
-            cIndexMap.put(c, index++);
+        List<Integer> ret = new ArrayList<>();
+        if(null==s) {
+            return ret;
         }
         
+        int sLength = s.length();
+        int pLength = p.length();
+        if(sLength < pLength) {
+            return ret;
+        }
         
-        char[] sc = s.toCharArray();
-        int sLength = sc.length;
-        
-        for (int i=0; i<sLength; i++) {
+        findAnagramsMY(s, p, sLength, pLength, ret);
+        return ret;
+    }
+    
+    /**
+     * 我的解决方式,使用两个Map来进行比较
+     * @param s
+     * @param p
+     * @param sLength
+     * @param pLength
+     * @param ret
+     */
+    public void findAnagramsMY(String s, String p, int sLength, int pLength, List<Integer> ret) {
+        HashMap<Character, Integer> cCountMap = new HashMap<>();
+        for (char c : p.toCharArray()) {
+            if(cCountMap.containsKey(c)) {
+                cCountMap.put(c, cCountMap.get(c)+1);
+            } else {
+                cCountMap.put(c, 1);
+            }
             
         }
         
+        int sBeginIndex = 0;
+        int sEndIndex = 0;
         
-        
-        
-        return null;
+        HashMap<Character, Integer> compareMap = new HashMap<>();
+        for (sEndIndex=0; sEndIndex<sLength; sEndIndex++) {
+            int currLength = (sEndIndex-sBeginIndex) + 1;
+            char c = s.charAt(sEndIndex);
+            if(compareMap.containsKey(c)) {
+                compareMap.put(c, compareMap.get(c)+1);
+            } else {
+                compareMap.put(c, 1);
+            }
+            
+            if(currLength < pLength) {
+                continue;
+            } else if(currLength > pLength) {
+                char cBegin = s.charAt(sBeginIndex);
+                int count = compareMap.get(cBegin);
+                if(count == 1) {
+                    compareMap.remove(cBegin);
+                } else {
+                    compareMap.put(cBegin, compareMap.get(cBegin)-1);
+                }
+                sBeginIndex++;
+            }
+            
+            if(compareMap.equals(cCountMap)) {
+                ret.add(sBeginIndex);
+            }
+        }
     }
-
 }
