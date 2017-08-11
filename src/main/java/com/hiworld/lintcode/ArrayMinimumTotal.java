@@ -39,14 +39,17 @@ public class ArrayMinimumTotal {
             return 0;
         }
         
-        return dp(triangle, 0, 0, 0);
+        int firstLevel = triangle[0][0];
+        firstLevel += dp(triangle, 0, 1, 1);
+        
+        return firstLevel;
     }
     
     /**
      * 动态规划：
      * 
-     * 状态：dp(triangle,i)
-     * 状态转移方程：dp(triangle,yStartIndex) = min(triangle[yStartIndex][?]) + dp(triangle,yStartIndex+1) 
+     * 状态：
+     * 状态转移方程： 
      * @param triangle
      * @param yStartIndex
      * @return
