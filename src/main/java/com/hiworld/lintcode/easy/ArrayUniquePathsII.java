@@ -38,9 +38,18 @@ public class ArrayUniquePathsII {
         return dp(obstacleGrid);
     }
     
+    /**
+     * 
+     * @param obstacleGrid
+     * @return
+     */
     public int dp(int[][] obstacleGrid) {
         int m = obstacleGrid.length;
         int n = obstacleGrid[0].length;
+        
+        if(obstacleGrid[0][0] == 1 || obstacleGrid[m-1][n-1] == 1) { //如果左上角或右下角元素就是障碍物,那么就0
+            return 0;
+        }
         
         boolean hasObstacles = false; //是否遇到障碍物
         for(int i=0; i<n; i++) { // 第一排
