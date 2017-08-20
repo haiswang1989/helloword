@@ -23,7 +23,10 @@ public class BackPackI {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        
+        int[] A = {2, 3, 5, 7};
+        BackPackI backPackI = new BackPackI();
+        int ret = backPackI.backPack(11, A);
+        System.out.println("ret : " + ret);
     }
     
     /**
@@ -34,23 +37,29 @@ public class BackPackI {
      */
     public int backPack(int m, int[] A) {
         // write your code here
-        return 1;
+        return dp(m, A);
     }
     
     /**
      * 
+     * 状态转移方程：dp[i] = max{dp[i],dp[i-A[i]] + A[i]}
      * @param m
      * @param LA
      * @return
      */
-    public int dp(int m, List<Integer> LA) {
-        
-        for (Integer integer : LA) {
-            
-            
-        }
-        
-        return 1;
+    public int dp(int m, int[] A) {
+    	int dp[] = new int[m+1];
+    	int length = A.length;
+    	
+    	for(int i=0; i<length; i++) {
+    		for(int j=m; j>0; j--) {
+    			if(j >= A[i]) {
+    				dp[j] = Math.max(dp[j], dp[j-A[i]] + A[i]);
+    			}
+    		}
+    	}
+    	
+        return dp[m];
     }
 
 }
