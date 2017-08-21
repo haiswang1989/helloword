@@ -22,6 +22,15 @@ public class BackPackVI {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
+    	
+    	int[] nums = {1, 2, 4};
+    	int target = 4;
+    	
+    	BackPackVI backPackVI = new BackPackVI();
+    	
+    	int ret = backPackVI.backPackVI(nums, target);
+    	System.out.println("ret : " + ret);
+    			
     }
     
     /**
@@ -33,6 +42,28 @@ public class BackPackVI {
      */
     public int backPackVI(int[] nums, int target) {
         // Write your code here
-        return 0;
+    	return dp(nums, target);
+    }
+    
+    /**
+     * 
+     * 
+     * @param nums
+     * @param target
+     * @return
+     */
+    public int dp(int[] nums, int target) {
+    	int length = nums.length;
+    	int count = 0;
+    	for(int i=0; i<length; i++) {
+    		int currNum = nums[i];
+    		if(target-currNum == 0) {
+    			count += 1;
+    		} else if(target-currNum > 0) {
+    			count += dp(nums, target-currNum);
+    		}
+    	}
+    	
+    	return count;
     }
 }
