@@ -22,7 +22,7 @@ public class BigIntMultiplication {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		BigIntMultiplication bigIntMultiplication = new BigIntMultiplication();
-		String ret = bigIntMultiplication.multiply("52345", "22");
+		String ret = bigIntMultiplication.multiply("1", "912891271261762152615265166721812910291921");
 		System.out.println("ret : " + ret);
 	}
 	
@@ -33,6 +33,10 @@ public class BigIntMultiplication {
      */
     public String multiply(String num1, String num2) {
         // Write your code here
+        if("0".equals(num1) || "0".equals(num2)) { //有任何一个为0时,那么结果就是0
+            return "0";
+        }
+        
     	char[] cNum1 = num1.toCharArray();
     	char[] cNum2 = num2.toCharArray();
     	
@@ -42,8 +46,8 @@ public class BigIntMultiplication {
     	List<char[]> charArrays = new ArrayList<>();
     	
     	for(int i=cNum2Length-1; i>=0; i--) {
-    		char[] ret = product(cNum1, cNum2[i], endZeroCount++);
-    		charArrays.add(ret);
+    	    char[] ret = product(cNum1, cNum2[i], endZeroCount++);
+    	    charArrays.add(ret);
     	}
     	
     	return doSum(charArrays);
@@ -51,86 +55,80 @@ public class BigIntMultiplication {
     
     /**
      * 
-     * 
-     * @param cNum1
-     * @param c
-     * @param endZeroCount
+     * 乘数和被乘数的每一位进行乘法计算
+     * @param cNum1 乘数
+     * @param c 被乘数的一位
+     * @param endZeroCount 在末尾填充0的个数
      * @return
      */
     public char[] product(char[] cNum1, char c, int endZeroCount) {
     	int length = cNum1.length;
-    	char[] ret = new char[length + endZeroCount];
-    	
+    	char[] ret = new char[length + endZeroCount + 1]; //乘数 * 被乘数(1位) 那么长度最多就是乘数的长度+1
     	int retLength = ret.length;
     	int zeroCount = 0;
     	
-    	int multiplicand = c - '0';
-    	if(multiplicand == 0) {
-    		return new char[0];
-    	}
+    	int multiplicand = c - '0'; //被乘数
+    	int carry = 0; //进位
     	
-    	int carry = 0;
-    	
-    	for(int fillIndex=retLength-1; fillIndex>=0; fillIndex--) {
-    		if(endZeroCount >= ++zeroCount) {
+    	int cNum1FromIndex = cNum1.length - 1; //乘数的开始位置
+    	for(int fillIndex=retLength-1; fillIndex>=1; fillIndex--) { //注意这边的fillIndex>=1,0的位置是给最后的进位的
+    		if(endZeroCount >= ++zeroCount) { //现在末尾填充'0'
     			ret[fillIndex] = '0'; 
-    		} else {
-    			int val = (cNum1[fillIndex]-'0') * multiplicand;
+    		} else { //计算该位置的值,以及设置进位
+    			int val = (cNum1[cNum1FromIndex--]-'0') * multiplicand;
     			val += carry;
-    			ret[fillIndex] = (char)(val % 10 + '0');
-    			carry = val / 10;
+    			ret[fillIndex] = (char)(val % 10 + '0'); //当前位的值
+    			carry = val / 10; //进位
     		}
     	}
     	
-    	if(carry != 0) {
-    		char[] realRet = new char[ret.length + 1];
-    		realRet[0] = (char)(carry + '0');
-    		System.arraycopy(ret, 0, realRet, 1, ret.length);
-    		return realRet;
+    	if(carry != 0) { //如果最后还有进位,那么需要进行填充
+    	    ret[0] = (char)(carry + '0');
+    	} else {
+    	    ret[0] = '0';
     	}
     	
     	return ret;
     }
     
     /**
-     * 
+     * 计算被乘数的各位与乘数的乘积的和
      * @param rets
      * @return
      */
     public String doSum(List<char[]> rets) {
-    	int fromEndIndex = 0;
-    	List<char[]> needRemove = new ArrayList<>();
-    	
-    	Stack<Character> values = new Stack<>();
+    	int fromEndIndex = 0; //从后往前累加
+    	List<char[]> needRemove = new ArrayList<>(); //需要删除的某位与乘数的乘积(累加结束)
+    	Stack<Character> values = new Stack<>(); //返回值
     	
     	int carry = 0;
     	while(rets.size() != 0) {
     		int sum = 0;
     		for (char[] chars : rets) {
-				int index = chars.length-1-fromEndIndex;
-				if(index < 0) {
+				int index = chars.length-1-fromEndIndex; //最后一个数在当前字符数组的位置
+				if(index < 0) { //如果该字符数组已经累加结束,那么这个字符数组就需要删除了
 					needRemove.add(chars);
 				} else {
-					sum += (chars[index]-'0');
+					sum += (chars[index]-'0'); //累加到sum上
 				}
 			}
     		
-    		sum += carry;
-    		values.push((char)(sum % 10 + '0'));
-    		carry = sum / 10;
+    		sum += carry; //前面的进位
+    		values.push((char)(sum % 10 + '0')); //当前位的值
+    		carry = sum / 10; //本轮进位
     		
-    		fromEndIndex++;
     		for (char[] cArray : needRemove) {
     			rets.remove(cArray);
 			}
     		needRemove.clear();
+    		fromEndIndex++;
     	}
     	
-    	if(carry != 0) {
+    	if(carry != 0) { //如果有进位
     		values.push((char)(carry + '0'));
     	}
     	
-    	while(values.peek() == '0') {
+    	while(values.size()!=0 && values.peek() == '0') { //pop出前面的0
     		values.pop();
     	}
     	
@@ -141,5 +139,4 @@ public class BigIntMultiplication {
     	
     	return new String(ret);
     }
-
 }

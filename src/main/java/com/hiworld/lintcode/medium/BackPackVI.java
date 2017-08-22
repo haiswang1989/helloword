@@ -24,7 +24,7 @@ public class BackPackVI {
         // TODO Auto-generated method stub
     	
     	int[] nums = {1, 2, 4};
-    	int target = 4;
+    	int target = 7;
     	
     	BackPackVI backPackVI = new BackPackVI();
     	
@@ -46,24 +46,56 @@ public class BackPackVI {
     }
     
     /**
+     * 样例：nums = [1, 2, 4], target = 4
      * 
+     * index： 0    1   2   3   4   5   6   7
+     * value： 1    1   2   3   6   10  18  31
+     * 
+     * 状态：dp[i]
+     * 
+     * 状态转换方程：
+     * foreach nums as num
+     * if(num <= target) {
+     *  dp[i] += dp[i-num]
+     * }
      * 
      * @param nums
      * @param target
      * @return
      */
     public int dp(int[] nums, int target) {
-    	int length = nums.length;
-    	int count = 0;
-    	for(int i=0; i<length; i++) {
-    		int currNum = nums[i];
-    		if(target-currNum == 0) {
-    			count += 1;
-    		} else if(target-currNum > 0) {
-    			count += dp(nums, target-currNum);
-    		}
-    	}
-    	
-    	return count;
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        for(int i=1; i<=target; i++) {
+            for(int j=0; j<nums.length; j++) {
+                if(nums[j] <= i) {
+                    dp[i] += dp[i-nums[j]];
+                }
+            }
+        }
+        
+        return dp[target];
     }
+    
+        /**
+         * 递归的方式(指数级增长),复杂度太高
+         * 无法被AC
+         * @param nums
+         * @param target
+         * @return
+         */
+        public int recusion(int[] nums, int target) {
+        	int length = nums.length;
+        	int count = 0;
+        	for(int i=0; i<length; i++) {
+        		int currNum = nums[i];
+        		if(target-currNum == 0) {
+        			count += 1;
+        		} else if(target-currNum > 0) {
+        			count += recusion(nums, target-currNum);
+        		}
+        	}
+        	
+        	return count;
+        }
 }
