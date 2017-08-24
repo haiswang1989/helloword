@@ -164,7 +164,6 @@ public class ArrayCombinationSumI {
 			}
 			
 			if(!hashSet.contains(map)) {
-				Collections.sort(l);
 				rets.add(l);
 				hashSet.add(map);
 			} 
