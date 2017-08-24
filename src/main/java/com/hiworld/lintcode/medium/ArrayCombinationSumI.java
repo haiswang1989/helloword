@@ -46,65 +46,50 @@ public class ArrayCombinationSumI {
     		return new ArrayList<>();
     	}
     	
-    	return likeDp(candidates, target);
+    	/***************回溯法解决**************/
+    	ArrayList<List<Integer>> allSolutions = new ArrayList<>();
+    	ArrayList<Integer> singleSolution = new ArrayList<>();
+    	
+    	recusionAndTrace(candidates, target, allSolutions, singleSolution, 0);
+    	return removeDuplicate(allSolutions);
+    	/*************动态规划(递推)************/
+//    	return likeDp(candidates, target);
     }
     
     /**
+     * 回溯探测实现方式
      * 思路：进行递归和回溯
-     * 
      * 触发条件：sum==target 或者 sum>target
-     * 
-     * 
      * @param candidates
      * @param target
      * @return
      */
-    public void recusionAndTrace(int[] candidates, List<List<Integer>> rets, ArrayList<Integer> ret, int target, int sum, int currIndex) {
-    	//TODO 回溯探测实现方式
-    	
-    	
-    }
-    
-    /**
-     * 快速排序
-     * @param candidates
-     * @param fromIndex
-     * @param endIndex
-     */
-    public void quickSort(int[] candidates, int fromIndex, int endIndex) {
-    	
-    	if(fromIndex < endIndex) {
-    		int i = fromIndex;
-    		int j = fromIndex;
-    		int baseIndex = i; //基数索引
-    		int base = candidates[baseIndex]; //基数值
-    		while(i < j) {
-    			while(candidates[j] < base && i < j) {
-    				j--;
-    			}
-    			if(i < j) {
-    				candidates[baseIndex] = candidates[j];
-    				baseIndex = j;
-    			}
-    			
-    			while(candidates[i] >= base && i < j) {
-    				i++;
-    			}
-    			if(i < j) {
-    				candidates[baseIndex] = candidates[i];
-    				baseIndex = i;
-    			}
-    		}
-    		
-    		candidates[baseIndex] = base;
-    		quickSort(candidates, fromIndex, baseIndex-1);
-    		quickSort(candidates, baseIndex+1, endIndex);
-    	}
+    public void recusionAndTrace(int[] candidates, int target, List<List<Integer>> allSolutions, ArrayList<Integer> singleSolution, int sum) {
+        if(sum == target) { //这边相等了就表示找到了一个满足条件的组合
+            ArrayList<Integer> onoSolution = new ArrayList<>(singleSolution);
+            allSolutions.add(onoSolution);
+            return;
+        } else if(sum > target) { //如果大于了,就要进行"回溯",然后尝试其他方式
+            return;
+        }
+        
+        int length  = candidates.length;
+        for(int i=0; i<length; i++) {
+            singleSolution.add(candidates[i]);
+            sum += candidates[i];
+            recusionAndTrace(candidates, target, allSolutions, singleSolution, sum); //递归往下探测
+            Integer lastInteger = singleSolution.remove(singleSolution.size()-1); //遇到(sum<target)的条件的时候进行回溯
+            sum -= lastInteger;
+        }
     }
     
     /*********************以下是我自己的实现方式***********************/
     /**
-     * 类似于动态规划的方式
+     * 类似于动态规划(递推)方式
+     * 
+     * dp[i] 表示 target为i的组合情况
+     * 
+     * dp[i] = foreach(dp[i - candidates[j]]) + candidates[j]
      * 
      * @param candidates
      * @param target
@@ -116,15 +101,13 @@ public class ArrayCombinationSumI {
         dp[0] = 0;
         
         int length = candidates.length;
-        
         Map<Integer, List<List<Integer>>> rets = new HashMap<>(); //存储1-target中每个数的组合
         
         for(int i=1; i<=target; i++) {
             for(int j=0; j<length; j++) {
-                if(candidates[j] == i) { //
+                if(candidates[j] == i) { //直接等于,那么单个数就是一个解决方案
                     List<Integer> list = new ArrayList<>();
                     list.add(candidates[j]);
-                    
                     List<List<Integer>> ret = null;
                     if(rets.containsKey(i)) {
                     	ret = rets.get(i);
@@ -136,7 +119,6 @@ public class ArrayCombinationSumI {
                 } else if(candidates[j] < i) {
                     int key = i - candidates[j];
                     List<List<Integer>> values = rets.get(key);
-                    
                     List<List<Integer>> ret = null;
                     if(rets.containsKey(i)) {
                     	ret = rets.get(i); 
@@ -144,27 +126,22 @@ public class ArrayCombinationSumI {
                     	ret = new ArrayList<>();
                     }
                     
-                    if(null!=values) {
+                    if(null!=values) { //dp[i - candidates[j]]
                     	for (List<Integer> value : values) {
     						List<Integer> list = new ArrayList<>(value);
     						list.add(candidates[j]);
     						ret.add(list);
     					}
-                        
                         rets.put(i, ret);
                     }
-                    
-                    
                 } else {
-                    //如果值大于target,那么就不需要了
+                    //如果值大于target,那么就不满足条件
                 }
             }
         }
         
         List<List<Integer>> ret = rets.get(target);
         return null==ret?null:removeDuplicate(ret);
-    
-    	
     }
     
     /**
