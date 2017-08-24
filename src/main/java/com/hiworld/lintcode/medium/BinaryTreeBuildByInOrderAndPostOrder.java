@@ -21,8 +21,8 @@ import com.hiworld.lintcode.common.TreeNode;
 public class BinaryTreeBuildByInOrderAndPostOrder {
     
     public static void main(String[] args) {
-        int[] inorder = {5,4,3,2,1};
-        int[] postorder = {5,4,3,2,1};
+        int[] inorder = {3,2,4,1,6,5,7};
+        int[] postorder = {3,4,2,6,7,5,1};
         
         BinaryTreeBuildByInOrderAndPostOrder binaryTreeBuildByInOrderAndPostOrder = new BinaryTreeBuildByInOrderAndPostOrder();
         TreeNode root = binaryTreeBuildByInOrderAndPostOrder.buildTree(inorder, postorder);
@@ -79,23 +79,25 @@ public class BinaryTreeBuildByInOrderAndPostOrder {
         }
         
         int count = 0;
-        for(int i=inorderBeginIndex; i<=inorderEndIndex; i++) {
+        for(int i=inorderEndIndex; i>=inorderBeginIndex; i--) {
             count++;
             if(inorder[i] == postorder[postorderEndIndex]) {
                 break;
             }
         }
         
-        int leftEndIndex = inorderBeginIndex + count - 1;
-        if(inorderBeginIndex <= leftEndIndex) {
-            TreeNode leftTree = buildWithRecusion(inorder, inorderBeginIndex, leftEndIndex, postorder, postorderBeginIndex, leftEndIndex);
+        
+        int leftCount = length - count; //左子树的元素个数
+        int rightCount = count - 1;  //右子树的元素个数
+        
+        if(leftCount != 0) {
+            TreeNode leftTree = buildWithRecusion(inorder, inorderBeginIndex, inorderBeginIndex+leftCount-1, postorder, postorderBeginIndex, postorderBeginIndex+leftCount-1);
             root.left = leftTree;
         }
         
         
-        int rightBeginIndex = inorderBeginIndex + count + 1;
-        if(rightBeginIndex <= inorderEndIndex) {
-            TreeNode rightTree = buildWithRecusion(inorder, rightBeginIndex, inorderEndIndex, postorder, rightBeginIndex, postorderEndIndex);
+        if(rightCount != 0) {
+            TreeNode rightTree = buildWithRecusion(inorder, inorderEndIndex-rightCount+1, inorderEndIndex, postorder, postorderEndIndex-rightCount, postorderEndIndex-1);
             root.right = rightTree;
         }
         
