@@ -34,7 +34,7 @@ public class ListSortedListToBST {
 		ListNode node4 = new ListNode(3);
 		ListNode node5 = new ListNode(5);
 		ListNode node6 = new ListNode(6);
-//		ListNode node7 = new ListNode(7);
+		ListNode node7 = new ListNode(7);
 //		ListNode node8 = new ListNode(8);
 		
 		node1.next = node2;
@@ -42,7 +42,7 @@ public class ListSortedListToBST {
 		node3.next = node4;
 		node4.next = node5;
 		node5.next = node6;
-//		node6.next = node7;
+		node6.next = node7;
 //		node7.next = node8;
 		
 		ListSortedListToBST listSortedListToBST = new ListSortedListToBST();
@@ -60,6 +60,7 @@ public class ListSortedListToBST {
     		return null;
     	}
     	
+    	//将所有的结点放入一个ArrayList中便于获取
     	ListNode node = head;
     	ArrayList<ListNode> nodes = new ArrayList<>();
     	nodes.add(node);
@@ -69,30 +70,31 @@ public class ListSortedListToBST {
     	
     	int count = nodes.size(); //节点个数
     	
-    	int treeHeight = 1;
-    	Map<Integer, Integer> height2NodeCount = new HashMap<>();
-    	int nc = 0;
-    	boolean isFull = false;
-    	while((nc=nodeCount(treeHeight)) <= count) {
-    		if(nc == count) {
+    	int treeHeight = 0; //树的高度
+    	Map<Integer, Integer> height2NodeCount = new HashMap<>(); //树的高度和元素个数(满查找树)的映射
+    	boolean isFull = false; //是否是满查找树
+    	int temp = 0; 
+    	while((temp=nodeCount(++treeHeight)) <= count) {
+    		if(temp == count) {
     			isFull = true;
     		}
     		
-    		height2NodeCount.put(treeHeight, nc);
-    		treeHeight++;
+    		height2NodeCount.put(treeHeight, temp);
     	}
     	
-    	if(!isFull) {
-    		height2NodeCount.put(treeHeight, nc);
-    		return withRecusion(nodes, 0, nodes.size()-1, height2NodeCount, treeHeight-1);
-    	} else {
-    		treeHeight--;
-    		return withRecusion(nodes, 0, nodes.size()-1, height2NodeCount, treeHeight);
+    	if(!isFull) { //非满查找树
+    		height2NodeCount.put(treeHeight, temp);
+    	} else {//如果是一颗满查找树
+    	    --treeHeight;
     	}
+    	
+    	return withRecusion(nodes, 0, nodes.size()-1, height2NodeCount, treeHeight);
     }
     
     /**
      * 每个高度元素的个数(满查找树)
+     * 等比数列的求和公式
+     * (a1 - an*q) / 1 - q  (q!=1)
      * @param treeHeight
      * @return
      */
@@ -101,7 +103,8 @@ public class ListSortedListToBST {
     }
     
     /**
-     * 
+     * 这边是求2的N次方,这边可以缓存提高速度
+     * @param power
      * @return
      */
     public int twoPower(int power) {
@@ -118,7 +121,7 @@ public class ListSortedListToBST {
     }
     
     /**
-     * 
+     * 递归构造
      * @param nodes
      * @param fromIndex
      * @param endIndex
@@ -144,11 +147,23 @@ public class ListSortedListToBST {
     		return head;
     	} 
     	
+    	//右子树最少元素个数
+    	int minRightNodeCount = height2NodeCount.get(height - 2);
+    	//左边子树最大元素个数
+    	int maxLeftNodeCount = height2NodeCount.get(height-1); 
+    	        
+    	//如何分左右子树的元素的个数
+    	//注意点：
+    	//1：确保右边的元素的个数不少于height2NodeCount.get(height - 2);
+    	//2：确保左边的元素的个数不大于height2NodeCount.get(height-1);
+    	int headNodeIndex = 0; 
+    	if(minRightNodeCount + maxLeftNodeCount + 1 < nodeCount) {
+    	    headNodeIndex = fromIndex + maxLeftNodeCount;
+    	} else {
+    	    headNodeIndex = endIndex - minRightNodeCount;
+    	}
     	
-    	
-    	int leftNodeCount = height2NodeCount.get(height-1);
-    	int headNodeIndex = fromIndex + leftNodeCount;
-    	
+    	//分配好了左右元素的个数,那么就直接递归好了
     	TreeNode leftTreeNode = withRecusion(nodes, fromIndex, headNodeIndex-1, height2NodeCount, height-1);
     	TreeNode rightTreeNode = withRecusion(nodes, headNodeIndex+1, endIndex, height2NodeCount, height-1);
     	
