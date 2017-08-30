@@ -29,7 +29,28 @@ public class SegmentTreeQueryII {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-
+        
+        SegmentTreeNode node1 = new SegmentTreeNode(0, 3, 3);
+        SegmentTreeNode node2 = new SegmentTreeNode(0, 1, 1);
+        SegmentTreeNode node3 = new SegmentTreeNode(2, 3, 2);
+        SegmentTreeNode node4 = new SegmentTreeNode(0, 0, 1);
+        SegmentTreeNode node5 = new SegmentTreeNode(1, 1, 0);
+        SegmentTreeNode node6 = new SegmentTreeNode(2, 2, 1);
+        SegmentTreeNode node7 = new SegmentTreeNode(3, 3, 1);
+        
+        node1.left = node2;
+        node1.right = node3;
+        
+        node2.left = node4;
+        node2.right = node5;
+        
+        node3.left = node6;
+        node3.right = node7;
+        
+        
+        SegmentTreeQueryII segmentTreeQueryII = new SegmentTreeQueryII();
+        int ret = segmentTreeQueryII.query(node1, 2, 3);
+        System.out.println("ret : " + ret);
     }
     
     /**
@@ -38,36 +59,21 @@ public class SegmentTreeQueryII {
      */
     public int query(SegmentTreeNode root, int start, int end) {
         // write your code here
-        if(null == root) {
+        if(null == root || root.start > end || root.end < start) { 
             return 0;
         } 
         
-        if(start < root.start) { //调整开始值,当开始值小于区间的开始值的时候,直接将查找开始值赋值为区间的开始值
-            start = root.start;
-        }
-        
-        if(end > root.end) { //调整结束值,当结束值大于区间的结束值的时候,直接将查找的结束值更新为区间的结束值
-            end = root.end;
-        }
-        
-        if(root.start>=start && root.end<=end) { //如果查找区间[start,end] 包含root,那么直接返回root的结点的个数
+        if(root.start>=start && root.end<=end) { //如果查找区间包含了结点的区间,那么就直接返回全部的元素的个数
             return root.count;
         }
         
-        
-        SegmentTreeNode node = root;
-        while(true) {
-            int currNodeBegin = node.start;
-            int currNodeEnd = node.end;
-            int middle = (currNodeBegin + currNodeEnd) / 2;
-            if(start == currNodeBegin) {
-            } else if(start <= middle) {
-                SegmentTreeNode leftSeg = root.left;
-            } else {
-                SegmentTreeNode rightSeg = root.right;
-            }
+        int middle = (root.start + root.end) / 2;
+        if(end <= middle) { //查找区间在left区间
+            return query(root.left, start, end);
+        } else if(start > middle) { //查找区间在right区间
+            return query(root.right, start, end);
+        } else {
+            return query(root.left, start, middle) + query(root.right, middle, end); //横跨left,right区间,那么就拆分成两个部分
         }
-        
-        return 1;
     }
 }
