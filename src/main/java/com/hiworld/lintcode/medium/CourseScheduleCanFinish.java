@@ -22,7 +22,7 @@ public class CourseScheduleCanFinish {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        int[][] prerequisites = {{0,1},{1,2},{2,1}};
+        int[][] prerequisites = {{0,1},{1,2},{2,3}};
         
         CourseScheduleCanFinish courseScheduleCanFinish = new CourseScheduleCanFinish();
         boolean canFinish = courseScheduleCanFinish.canFinish(4, prerequisites);
@@ -75,7 +75,7 @@ public class CourseScheduleCanFinish {
     
     
     /**
-     * 拓扑排序
+     * 拓扑排序(不能被AC)
      * @param numCourses
      * @param prerequisites
      * @return
@@ -89,6 +89,7 @@ public class CourseScheduleCanFinish {
             ++map[prerequisites[i][1]];
         }
         
+        //没有被前置的课程的编号
         Queue<Integer> notPre = new LinkedList<>();
         for(int i=0; i<map.length; i++) {
             if(map[i] == 0) {
@@ -98,14 +99,19 @@ public class CourseScheduleCanFinish {
         
         int count = notPre.size();
         while(!notPre.isEmpty()) {
+            //获取一个没有被前置的课程编号
             Integer notPreNum = notPre.remove();
             for(int i=0; i<length; i++) {
+                //找到该课程
                 if(prerequisites[i][0] == notPreNum) {
+                    //将该课程的"前置课程"的依赖次数减一
                     --map[prerequisites[i][1]];
-                    if(map[prerequisites[i][1]] == 0) {
+                    if(map[prerequisites[i][1]] == 0) { //如果该"前置课程"的依赖次数变为0了,
                         notPre.offer(prerequisites[i][1]);
                         count++;
                     }
+                    
+                    break;
                 }
             }
         }
