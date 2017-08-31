@@ -1,7 +1,5 @@
 package com.hiworld.lintcode.medium;
 
-import java.util.Stack;
-
 /**
  * 问题：Expression Expand 
  * 描述：
@@ -20,7 +18,11 @@ public class ExpressionExpand {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-
+        
+        String s = "3[2[ad]3[pf]]xyz";
+        ExpressionExpand expressionExpand = new ExpressionExpand();
+        String ret = expressionExpand.expressionExpand(s);
+        System.out.println("ret : " + ret);
     }
     
     /**
@@ -33,21 +35,44 @@ public class ExpressionExpand {
             return s;
         }
         
-        Stack<Character> chars = new Stack<>();
-        boolean needExp = false;
-        int beginCnt = 0;
+        StringBuilder tmp = new StringBuilder();
+        StringBuilder sBuilder = new StringBuilder();
         
-        for (Character character : s.toCharArray()) {
-            chars.push(character);
-            if(!needExp) {
-                if(character == '[') {
-                    needExp = true;
+        int lastBeginIndex = -1;
+        while(-1!=(lastBeginIndex=s.lastIndexOf("["))) {
+            int endIndex = s.indexOf("]", lastBeginIndex);
+            
+            int timeEnd = lastBeginIndex-1;
+            int timeBegin = timeEnd;
+            
+            while(timeBegin > 0) {
+                char timeC = s.charAt(timeBegin-1);
+                if(timeC >= '0' && timeC <= '9') {
+                    timeBegin--;
+                } else {
+                    break;
                 }
             }
+            
+            int time = 0;
+            if(timeEnd == timeBegin) {
+                time = s.charAt(timeBegin)-'0';
+            } else {
+                time = Integer.parseInt(s.substring(timeEnd, timeBegin));
+            }
+            
+            String tmpString = s.substring(timeEnd+1, endIndex);
+            while(time-- > 0) {
+                tmp.append(tmpString);
+            }
+            
+            sBuilder.append(s.substring(0, timeBegin-1)).append(tmp.toString()).append(s.substring(endIndex+1));
+            s = sBuilder.toString();
+            
+            tmp.setLength(0);
+            sBuilder.setLength(0);
         }
         
-        
-        
+        return s;
     }
-
 }
