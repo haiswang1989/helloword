@@ -19,7 +19,7 @@ public class ExpressionExpand {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         
-        String s = "3[2[ad]3[pf]]xyz";
+        String s = "3[abc]";
         ExpressionExpand expressionExpand = new ExpressionExpand();
         String ret = expressionExpand.expressionExpand(s);
         System.out.println("ret : " + ret);
@@ -35,16 +35,16 @@ public class ExpressionExpand {
             return s;
         }
         
-        StringBuilder tmp = new StringBuilder();
-        StringBuilder sBuilder = new StringBuilder();
+        StringBuilder tmp = new StringBuilder();//n[**],存储n个** 
+        StringBuilder sBuilder = new StringBuilder(); //存储解析了一个[]的结果集
         
         int lastBeginIndex = -1;
-        while(-1!=(lastBeginIndex=s.lastIndexOf("["))) {
-            int endIndex = s.indexOf("]", lastBeginIndex);
+        while(-1!=(lastBeginIndex=s.lastIndexOf("["))) { //找到最后一个"["
+            int endIndex = s.indexOf("]", lastBeginIndex); //找到与最后一个"["匹配的"]"
             
+            //获取n[]前面的n,注意这个可能是多位数
             int timeEnd = lastBeginIndex-1;
             int timeBegin = timeEnd;
-            
             while(timeBegin > 0) {
                 char timeC = s.charAt(timeBegin-1);
                 if(timeC >= '0' && timeC <= '9') {
@@ -58,15 +58,17 @@ public class ExpressionExpand {
             if(timeEnd == timeBegin) {
                 time = s.charAt(timeBegin)-'0';
             } else {
-                time = Integer.parseInt(s.substring(timeEnd, timeBegin));
+                time = Integer.parseInt(s.substring(timeBegin, timeEnd+1));
             }
             
-            String tmpString = s.substring(timeEnd+1, endIndex);
-            while(time-- > 0) {
+            //获取[*]中的字符串
+            String tmpString = s.substring(timeEnd+2, endIndex);
+            while(time-- > 0) { //生成多个[]中的字符串
                 tmp.append(tmpString);
             }
             
-            sBuilder.append(s.substring(0, timeBegin-1)).append(tmp.toString()).append(s.substring(endIndex+1));
+            //生成解析一次的结果,然后进行循环
+            sBuilder.append(s.substring(0, timeBegin)).append(tmp.toString()).append(s.substring(endIndex+1));
             s = sBuilder.toString();
             
             tmp.setLength(0);
