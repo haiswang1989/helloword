@@ -14,9 +14,8 @@ package com.hiworld.lintcode.medium;
 public class Divide {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		int dividend = 1;
-		int divisor = 1;
+		int dividend = 100;
+		int divisor = 9;
 		
 		Divide divide = new Divide();
 		int ret = divide.divide(dividend, divisor);
@@ -30,35 +29,34 @@ public class Divide {
      */
     public int divide(int dividend, int divisor) {
         // write your code here
+        // x(被除数) / y(除数)
+        //dividend 被除数
     	//divisor 除数
-    	//dividend 被除数
     	
-    	if(dividend < 0) {
-    	}
+        //溢出情况
+        if(divisor == 0 || (dividend==Integer.MIN_VALUE && divisor==-1)) {
+            return Integer.MAX_VALUE;
+        }
+        
+        int sign = (dividend>0) ^ (divisor>0) ? -1 : 1; 
     	
-    	if(dividend < divisor) {
-    		return 0;
-    	}
-    	
-    	return bySubtraction(dividend, divisor);
-    }
-    
-    /**
-     * 通过减法实现
-     * @param dividend
-     * @param divisor
-     * @return
-     */
-    public int bySubtraction(int dividend, int divisor) {
-    	int count = 0;
-    	while(dividend >= divisor) {
-    		count++;
-    		dividend -= divisor;
-    		if(count < 0) {
-    			return 2147483647;
-    		}
-    	}
-    	
-    	return count;
+        int result = 0;
+        long dividendL = Math.abs((long)dividend);
+        long divisorL = Math.abs((long)divisor);
+        
+        while(dividendL >= divisorL) {
+            long sub = divisorL;
+            int subR = 1;
+            
+            while(dividendL >= (sub << 1)) { //当小于出现,那么就一颗跳出该次循环
+                sub <<= 1; //除数在2的倍数增加
+                subR <<=1; //结果也就成2的倍数的增加
+            }
+            
+            dividendL -= sub; //剩下的结果集
+            result += subR; //输出结果集
+        }
+        
+        return sign * result;
     }
 }
