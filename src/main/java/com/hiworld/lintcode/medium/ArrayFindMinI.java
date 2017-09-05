@@ -38,7 +38,7 @@ public class ArrayFindMinI {
     }
     
     /**
-     * 二分查找
+     * 二分查找,时间复杂度为O(logn)
      * 对于这样的 完全排序的选择后的数组 也可以使用二分查找来 获取最小值
      * 
      * @param nums
