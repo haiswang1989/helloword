@@ -1,10 +1,5 @@
 package com.hiworld.lintcode.medium;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * 问题：寻找丢失的数 II
  * 描述：给一个由 1 - n 的整数随机组成的一个字符串序列，其中丢失了一个整数，请找到它。
@@ -20,11 +15,13 @@ import java.util.Set;
  * @date 2017年9月6日 下午4:33:08
  */
 public class ArrayFindMissingII {
-
+    
+    boolean quit = false;
+    
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         ArrayFindMissingII arrayFindMissingII = new ArrayFindMissingII();
-        int ret = arrayFindMissingII.findMissing2(20, "19201234567891011121314151618");
+        int ret = arrayFindMissingII.findMissing2(12, "1234152678911");
         System.out.println("ret : " + ret);
     }
     
@@ -35,46 +32,65 @@ public class ArrayFindMissingII {
      */
     public int findMissing2(int n, String str) {
         // write your code here
-        return byMapSolution(n, str);
+        return solution(n, str);
+    }
+    
+    /**************************网上的解决方案,深度优先搜索***************************/
+    public int solution(int n, String str) {
+        //数组的索引作为每个元素的值,存在则为true,不存在则为false
+        //忽略index = 0的索引
+        boolean[] numExist = new boolean[n + 1];
+        dfs(0, n, str, numExist);
+        int ret = Integer.MIN_VALUE;
+        for(int i=1; i<numExist.length; ++i) {
+            if(!numExist[i]) {
+                ret = i;
+                break;
+            }
+        }
+        
+        return ret;
     }
     
     /**
-     * 
+     * 深度优先搜索
+     * @param fromIndex
      * @param n
      * @param str
-     * @return
+     * @param numExist
      */
-    public int byMapSolution(int n, String str) {
-        Map<Character, Integer> charsCnt = new HashMap<Character, Integer>();
-        StringBuilder strBuilder = new StringBuilder();
-        for(int i=1; i<=n; i++) {
-            strBuilder.append(i+"");
+    public void dfs(int fromIndex, int n, String str, boolean[] numExist) {
+        //索引位置越界
+        if(fromIndex >= str.length()) {
+            //到了这边可以直接退出了
+            quit = true;
+            return;
         }
         
-        for (Character c : strBuilder.toString().toCharArray()) {
-            if(charsCnt.containsKey(c)) {
-                charsCnt.put(c, charsCnt.get(c) + 1);
-            } else {
-                charsCnt.put(c, 1);
+        int currInt = str.charAt(fromIndex) - '0';
+        if(currInt == 0) {
+            return;
+        }
+        
+        while(currInt <= n && !quit) {
+            if(!numExist[currInt]) {
+                numExist[currInt] = true;
+                dfs(fromIndex + 1, n, str, numExist);
+                //递归pop出来继续执行的时候,如果是停止指令,那么就直接返回了,不要再递归了
+                if(quit) { 
+                    return;
+                } 
+                //如果是搜索过程中的正常pop,那么需要回滚状态
+                numExist[currInt] = false;
             }
-        }
-        
-        for (Character c : str.toCharArray()) {
-            int count = charsCnt.get(c);
-            if(count == 1) {
-                charsCnt.remove(c);
-            } else {
-                charsCnt.put(c, count-1);
+            
+            fromIndex++;
+            if(fromIndex >= str.length()) {
+                break;
             }
+            
+            //新值
+            currInt = currInt * 10 + str.charAt(fromIndex) - '0';
         }
-        
-        Set<Character> remainKeys = charsCnt.keySet();
-        Iterator<Character> iter = remainKeys.iterator();
-        if(remainKeys.size() == 1) {
-        } else { 
-            //remainKeys.size() == 2
-        } 
-        
-        return 0;
     }
 }
