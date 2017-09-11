@@ -15,7 +15,7 @@ public class ArrayRerange {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        int[] A = {-1, -2, -3, 4, 5, 6};
+        int[] A = {28,2,-22,-27,2,9,-33,-4,-18,26,25,34,-35,-17,2,-2,32,35,-8};
         
         ArrayRerange arrayRerange = new ArrayRerange();
         arrayRerange.rerange(A);
@@ -26,23 +26,85 @@ public class ArrayRerange {
      * @param A: An integer array.
      * @return: void
      */
-    public void rerange(int[] A) {
+    public void rerange(int[] A) { 
         // write your code here
-        if(null==A || A.length<=2) {
+        int length = -1;
+        if(null==A || (length=A.length)<=2) {
             return;
         }
         
-        int length = A.length;
-        boolean isPositive = false;
-        if(A[0] >= 0) {
-            isPositive = true;
+        quickSort(A, 0, length-1); //先排序
+        int fromIndex = 0;
+        int endIndex = length - 1;
+        
+        while(fromIndex < endIndex) { //然后对数组 进行 前后元素(跳跃)对调
+            swap(A, fromIndex, endIndex);
+            fromIndex += 2;
+            endIndex -= 2;
         }
         
-        int fromIndex = 1;
-        while(fromIndex < length) {
+        boolean isOdd = length % 2 == 1 ? true : false; //如果元素的个数是奇数,那么中间会出现连续的正数或者负数
+        int middleIndex = length / 2;
+        if(isOdd) {
+            int middle = A[middleIndex];
+            if(middle < 0) { //负数,放到前面
+                System.arraycopy(A, 0, A, 1, middleIndex);
+                A[0] = middle;
+            } else { //正数,放到后面
+                System.arraycopy(A, middleIndex+1, A, middleIndex, A.length-middleIndex-1);
+                A[A.length-1] = middle;
+            }
+        }
+    }
+    
+    /**
+     * 
+     * @param A
+     * @param fromIndex
+     * @param endIndex
+     */
+    public void quickSort(int[] A, int fromIndex, int endIndex) {
+        if(fromIndex < endIndex) {
+            int i = fromIndex;
+            int j = endIndex;
+            int baseIndex = i;
+            int base = A[i];
             
+            while(i < j) {
+                while(i < j && A[j] >= base) {
+                    j--;
+                }
+                
+                if(i < j) {
+                    A[baseIndex] = A[j];
+                    baseIndex = j;
+                }
+                
+                while(i < j && A[i] < base) {
+                    i++;
+                }
+                
+                if(i < j) {
+                    A[baseIndex] = A[i];
+                    baseIndex = i;
+                }
+            }
+            
+            A[baseIndex] = base;
+            quickSort(A, fromIndex, baseIndex-1);
+            quickSort(A, baseIndex+1, endIndex);
         }
-        
-        
+    }
+    
+    /**
+     * 
+     * @param A
+     * @param fromIndex
+     * @param endIndex
+     */
+    public void swap(int[] A, int fromIndex, int endIndex) {
+        int temp = A[fromIndex];
+        A[fromIndex] = A[endIndex];
+        A[endIndex] = temp;
     }
 }
