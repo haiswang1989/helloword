@@ -1,4 +1,4 @@
-package com.hiworld.thread;
+package com.hiworld.threadcoordinate;
 
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;

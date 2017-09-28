@@ -2,6 +2,14 @@ package com.hiworld.lock;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 实验线程被stop(),可能会导致Lock不会被释放
+ * 
+ * 
+ * <p>Description:</p>
+ * @author hansen.wang
+ * @date 2017年9月25日 下午4:05:24
+ */
 public class Locks {
     
     static final ReentrantLock fairLock = new ReentrantLock(true);
@@ -19,9 +27,9 @@ public class Locks {
             
             @Override
             public void run() {
+                //这种标准获取获取锁的方式,如果其他的线程stop当前线程,可能会导致死锁
                 fairLock.lock();
                 System.out.println("Thread-1 Get lock...");
-                
                 try {
                     Thread.sleep(2000l);
                 } catch (InterruptedException e) {

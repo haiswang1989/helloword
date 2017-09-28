@@ -1,4 +1,4 @@
-package com.hiworld.concurrent;
+package com.hiworld.threadcoordinate;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
