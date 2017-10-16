@@ -1,4 +1,4 @@
-package com.hiworld.threadcoordinate;
+package com.hiworld.concurrent;
 
 import java.util.concurrent.Executors;
 
@@ -20,9 +20,6 @@ public class ThreadPool {
         
         //ScheduledThreadPoolExecutor with DelayedWorkQueue
         Executors.newSingleThreadScheduledExecutor();
-        
-        Thread t1 = null;
-        t1.stop();
     }
     
 }
