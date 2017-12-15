@@ -15,9 +15,8 @@ public class FanXing {
     public static void main(String[] args) {
         
         //List<T> tList = new ArrayList<>(); //编译出错
-        
         List<Object> objList = new ArrayList<>();
-        List<? extends Object> list = new ArrayList<? extends Object>();
+        List<? extends Object> list = new ArrayList<Object>();
         
         Integer age = 27;
         String name = "haiswang";
@@ -25,8 +24,8 @@ public class FanXing {
         objList.add(age);
         objList.add(name);
         
-        list.add(age);
-        list.add(name);
+//        list.add(age);
+//        list.add(name);
     }
     
 }
