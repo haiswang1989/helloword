@@ -28,6 +28,8 @@ import java.util.concurrent.TimeUnit;
  * 
  * 分层编译的XX:CompileThreshold参数好像与"标量化"没有太直接的联系
  * 
+ * 逃逸分析后对象的"标量化"测试
+ * 
  * <p>Description:</p>
  * @author hansen.wang
  * @date 2018年1月5日 上午10:54:02
