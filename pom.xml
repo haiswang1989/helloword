@@ -11,6 +11,12 @@
 	</properties>
 	
 	<dependencies>
+		<dependency>
+		    <groupId>org.jctools</groupId>
+		    <artifactId>jctools-core</artifactId>
+		    <version>1.0</version>
+		</dependency>
+	
         <dependency>
 		    <groupId>com.alibaba</groupId>
 		    <artifactId>fastjson</artifactId>
