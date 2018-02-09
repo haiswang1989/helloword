@@ -1,6 +1,7 @@
 package com.hiworld.jdk.thread;
 
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -65,6 +66,8 @@ public class ThreadPoolExecutorSource {
                 System.out.println("Runnable : " + r + ", Throwable : " + t);
             }
         };
+        
+        executor.submit(new MyCallable());
         
         //采用Future.get()的方式,才能正确的拿到Exception
         Future<?> future = executor.submit(new ThrowExceptionThread());
@@ -142,6 +145,20 @@ public class ThreadPoolExecutorSource {
  * 
  * <p>Description:</p>
  * @author hansen.wang
+ * @date 2018年1月17日 下午3:57:29
+ */
+class MyCallable implements Callable<Void> {
+    
+    @Override
+    public Void call() throws Exception {
+        throw new RuntimeException("Callable |= Error!!!");
+    }
+}
+
+/**
+ * 
+ * <p>Description:</p>
+ * @author hansen.wang
  * @date 2018年1月16日 下午2:18:49
  */
 class MyThread implements Runnable {
@@ -166,6 +183,6 @@ class MyThread implements Runnable {
 class ThrowExceptionThread implements Runnable {
     @Override
     public void run() {
-        throw new RuntimeException("error!!!");
+        throw new RuntimeException("Runnable |= Error!!!");
     }
 }

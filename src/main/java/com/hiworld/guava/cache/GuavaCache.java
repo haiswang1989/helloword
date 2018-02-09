@@ -34,6 +34,7 @@ public class GuavaCache {
                 .build(new CacheLoader<Integer, String>() {
                     @Override
                     public String load(Integer key) {
+                        //***这边控制load函数实现但线程汇源DB,防止DB雪崩
                         return "null";
                     } 
                 });

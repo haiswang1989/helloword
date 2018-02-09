@@ -19,6 +19,10 @@ public class CopyOnWriteArrayListSource {
         cowArrayList.add(3);
         cowArrayList.add(4);
         
+        //添加元素(如果不存在)
+        cowArrayList.addIfAbsent(4);
+        
+        
 //        cowArrayList.remove(1);
 //        int value = cowArrayList.get(0);
 //        System.out.println(value);
