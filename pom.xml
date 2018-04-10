@@ -12,6 +12,12 @@
 	
 	<dependencies>
 		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>5.1.46</version>
+		</dependency>
+        
+		<dependency>
 		    <groupId>cglib</groupId>
 		    <artifactId>cglib</artifactId>
 		    <version>3.2.4</version>

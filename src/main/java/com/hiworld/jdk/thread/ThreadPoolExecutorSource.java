@@ -21,9 +21,9 @@ public class ThreadPoolExecutorSource {
     public static void main(String[] args) {
         
         //池中保存的线程数,包括空闲线程
-        int corePoolSize = 5;
+        int corePoolSize = 2;
         //池中允许的最大线程数
-        int maximumPoolSize = 10;
+        int maximumPoolSize = 3;
         //当线程数大于核心线程数量时(corePoolSize),终止多余的空闲线程等待新任务的时间
         long keepAliveTime = 30L;
         //********************************************************************************************************************
@@ -34,7 +34,7 @@ public class ThreadPoolExecutorSource {
         //如果使用的SynchronousQueue,那么就直接使用"maximumPoolSize"线程数来处理任务
         //从jconsole来看,就是加入一个任务,就会启动一个"执行线程"处理,直到"执行线程"数等于maximumPoolSize就不会再上涨了
         //原因是SynchronousQueue是一个"传递"队列,不能存放元素,只能又有take的时候才能put(有人put的时候才能take)
-        //SynchronousQueue<Runnable> workQueue = new SynchronousQueue<>();
+        SynchronousQueue<Runnable> workQueue = new SynchronousQueue<>();
         //********************************************************************************************************************
         //如果使用的是ArrayBlockingQueue
         //当提交的任务数小于等于corePoolSize时,来一个执行一个
@@ -45,7 +45,7 @@ public class ThreadPoolExecutorSource {
         //当使用LinkedBlockingQueue这个队列的时候
         //理论上讲,当使用LinkedBlockingQueue队列的时候,maximumPoolSize参数基本就没啥用了,"执行线程只会"等于corePoolSize设置的大小
         //当使用LinkedBlockingQueue队列的时候,RejectedExecutionHandler的设置也基本没啥用了,不太可能把LinkedBlockingQueue放满
-        LinkedBlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>();
+        //LinkedBlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>();
         //********************************************************************************************************************
         //创建执行线程的工厂
         ThreadFactory threadFactory = newGenericThreadFactory(THREAD_POOL_NAME);
@@ -56,7 +56,7 @@ public class ThreadPoolExecutorSource {
         //new ThreadPoolExecutor.AbortPolicy() //直接抛出异常
         //new ThreadPoolExecutor.DiscardPolicy() //直接把异常吃了,这个任务就丢了
         //new ThreadPoolExecutor.DiscardOldestPolicy() //直接吧队列中最老的任务丢弃,将该任务加入到队列
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, workQueue, threadFactory, new ThreadPoolExecutor.AbortPolicy()) {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, workQueue, threadFactory, new ThreadPoolExecutor.CallerRunsPolicy()) {
             @Override
             protected void afterExecute(Runnable r, Throwable t) {
                 //Executor + Runnable的异常处理结果
@@ -67,31 +67,33 @@ public class ThreadPoolExecutorSource {
             }
         };
         
-        executor.submit(new MyCallable());
-        
+//        executor.submit(new MyCallable());
         //采用Future.get()的方式,才能正确的拿到Exception
-        Future<?> future = executor.submit(new ThrowExceptionThread());
-        try {
-            future.get();
-        } catch (InterruptedException e) {
-            System.out.println("Exception-1 : " + e);
-        } catch (ExecutionException e) {
-            System.out.println("Exception-2 : " + e);
-        }
-//        executor.submit(new MyThread());
-//        executor.submit(new MyThread());
-//        executor.submit(new MyThread());
-//        executor.submit(new MyThread());
-//        executor.submit(new MyThread());
-//        executor.submit(new MyThread());
-//        executor.submit(new MyThread());
-//        executor.submit(new MyThread());
-//        executor.submit(new MyThread());
-//        executor.submit(new MyThread());
-//        executor.submit(new MyThread());
-//        executor.submit(new MyThread());
+//        Future<?> future = executor.submit(new ThrowExceptionThread());
+//        try {
+//            future.get();
+//        } catch (InterruptedException e) {
+//            System.out.println("Exception-1 : " + e);
+//        } catch (ExecutionException e) {
+//            System.out.println("Exception-2 : " + e);
+//        }
         
-        checkThreadFactoryExceptionHandler();
+        executor.submit(new MyThread("0001"));
+        executor.submit(new MyThread("0002"));
+        executor.submit(new MyThread("0003"));
+        executor.submit(new MyThread("0004"));
+        executor.submit(new MyThread("0005"));
+        
+        
+//        executor.submit(new MyThread("0006"));
+//        executor.submit(new MyThread("0007"));
+//        executor.submit(new MyThread("0008"));
+//        executor.submit(new MyThread("0009"));
+//        executor.submit(new MyThread("0010"));
+//        executor.submit(new MyThread("0011"));
+//        executor.submit(new MyThread("0012"));
+        
+//        checkThreadFactoryExceptionHandler();
         
     }
     
@@ -163,14 +165,20 @@ class MyCallable implements Callable<Void> {
  */
 class MyThread implements Runnable {
     
+    private String threadId;
+    
+    public MyThread(String threadId) {
+        this.threadId = threadId;
+    }
+    
     @Override
     public void run() {
-        while(true) {
-            try {
-                Thread.sleep(10000L);
-            } catch (InterruptedException e) {
-            }
+        System.out.println("submit thread, id : " + threadId);
+        try {
+            Thread.sleep(10000L);
+        } catch (InterruptedException e) {
         }
+        System.out.println("thread run over, id : " + threadId);
     }
 }
 

@@ -8,11 +8,12 @@ public class WitchClassLoader {
         ClassLoader appClassLoader = Thread.currentThread().getContextClassLoader();
         System.out.println(appClassLoader);
         
-        //app classloader
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        System.out.println(classLoader);
+        //线程上下文classloader
+        ClassLoader threadContextClassLoader = Thread.currentThread().getContextClassLoader();
+        System.out.println(threadContextClassLoader);
         
         //NULL ,因为bootstrap是C写的,所以是null
+        //jre/lib/rt.jar
         ClassLoader bootstrapClassLoader = String.class.getClassLoader();
         System.out.println(bootstrapClassLoader);
         
