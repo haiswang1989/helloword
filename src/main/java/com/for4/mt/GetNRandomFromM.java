@@ -65,7 +65,7 @@ class GetNFromM {
             //将选中的数放到最后
             swap(randomVal, m-i-1);
             //被选中的数据就用于构造返回值
-            ret[i] = arr[randomVal];
+            ret[i] = arr[m-i-1];
         }
         
         return ret;
