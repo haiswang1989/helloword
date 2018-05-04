@@ -56,7 +56,7 @@ public class ThreadPoolExecutorSource {
         //new ThreadPoolExecutor.AbortPolicy() //直接抛出异常
         //new ThreadPoolExecutor.DiscardPolicy() //直接把异常吃了,这个任务就丢了
         //new ThreadPoolExecutor.DiscardOldestPolicy() //直接吧队列中最老的任务丢弃,将该任务加入到队列
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, workQueue, threadFactory, new ThreadPoolExecutor.CallerRunsPolicy()) {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, workQueue, threadFactory, new ThreadPoolExecutor.AbortPolicy()) {
             @Override
             protected void afterExecute(Runnable r, Throwable t) {
                 //Executor + Runnable的异常处理结果

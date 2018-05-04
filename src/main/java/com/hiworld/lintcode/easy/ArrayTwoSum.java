@@ -50,6 +50,7 @@ public class ArrayTwoSum {
                 int index = valIndexMap.get(needVal);
                 ret[0] = index;
                 ret[1] = i+1;
+                break;
             } else {
                 valIndexMap.put(val, i+1);
             }
