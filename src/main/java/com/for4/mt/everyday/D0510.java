@@ -6,33 +6,34 @@ import java.util.Arrays;
  * 
  * <p>Description:</p>
  * @author hansen.wang
- * @date 2018年5月4日 上午10:47:12
+ * @date 2018年5月10日 上午8:30:31
  */
-public class D0504 {
+public class D0510 {
 
     public static void main(String[] args) {
+        
         int[] arrForFastsort = {11,7,18,3,5,4,10,9};
-        Fastsort0504 fastsort = new Fastsort0504(arrForFastsort);
+        Fastsort0510 fastsort = new Fastsort0510(arrForFastsort);
         fastsort.sort();
         System.out.println(Arrays.toString(arrForFastsort));
         
-        
         int[] arrForHeapsort = {11,7,18,3,5,4,10,9};
-        Heapsort0504 heapsort = new Heapsort0504(arrForHeapsort);
+        Heapsort0510 heapsort = new Heapsort0510(arrForHeapsort);
         heapsort.sort();
         System.out.println(Arrays.toString(arrForHeapsort));
-        
-        int[] arrForTopn = {11,7,18,3,5,4,10,9};
-        Topn0504 topn = new Topn0504(arrForTopn, 5);
-        int[] ret = topn.topn();
-        System.out.println(Arrays.toString(ret));
         
         int[] arrKLargest = {11,7,18,3,5,4,10,9,1,2,20,25,12,13,55,66,33,99,78,89,55};
         for(int i=1; i<=arrKLargest.length; i++) {
             int[] arrKLargest_1 = {11,7,18,3,5,4,10,9,1,2,20,25,12,13,55,66,33,99,78,89,55};
-            KLargest0504 kLargestByFastsort = new KLargest0504(arrKLargest_1, i);
+            KLargest0510 kLargestByFastsort = new KLargest0510(arrKLargest_1, i);
             System.out.print(kLargestByFastsort.kLargest() + ", ");
         }
+        System.out.println();
+        
+        int[] arrForTopn = {11,7,18,3,5,4,10,9};
+        Topn0510 topn = new Topn0510(arrForTopn, 5);
+        int[] ret = topn.topn();
+        System.out.println(Arrays.toString(ret));
     }
 
 }
@@ -41,13 +42,13 @@ public class D0504 {
  * 快速排序
  * <p>Description:</p>
  * @author hansen.wang
- * @date 2018年5月4日 上午8:39:00
+ * @date 2018年5月10日 上午8:34:25
  */
-class Fastsort0504 {
+class Fastsort0510 {
     
     private int[] arr;
     
-    public Fastsort0504(int[] arrArgs) {
+    public Fastsort0510(int[] arrArgs) {
         this.arr = arrArgs;
     }
     
@@ -57,7 +58,6 @@ class Fastsort0504 {
     
     private void fastsort(int fromIndex, int endIndex) {
         if(fromIndex < endIndex) {
-            
             int i = fromIndex;
             int j = endIndex;
             
@@ -65,6 +65,7 @@ class Fastsort0504 {
             int base = arr[baseIndex];
             
             while(i < j) {
+                
                 while(i < j && arr[j] > base) {
                     j--;
                 }
@@ -79,7 +80,7 @@ class Fastsort0504 {
                 }
                 
                 if(i < j) {
-                    arr[baseIndex] = arr[i];
+                    arr[baseIndex]  = arr[i];
                     baseIndex = i;
                 }
             }
@@ -95,43 +96,41 @@ class Fastsort0504 {
  * 堆排序
  * <p>Description:</p>
  * @author hansen.wang
- * @date 2018年5月4日 上午8:39:35
+ * @date 2018年5月10日 上午8:34:45
  */
-class Heapsort0504 {
+class Heapsort0510 {
     
     private int[] arr;
     
-    public Heapsort0504(int[] arrArgs) {
+    public Heapsort0510(int[] arrArgs) {
         this.arr = arrArgs;
     }
     
     public void sort() {
         
-        int arrLength = arr.length;
-        int adjustIndex = arrLength / 2 - 1;
+        int length = arr.length;
         
+        int adjustIndex = length / 2 - 1;
         for(int i=adjustIndex; i>=0; i--) {
-            adjustHeap(i, arrLength);
+            adjustHeap(i, length);
         }
         
-        for(int j=arrLength-1; j>=0; j--) {
+        for(int j=length-1; j>=0; j--) {
             swap(0, j);
             adjustHeap(0, j);
         }
+        
     }
     
-    /**
-     * 
-     * @param adjustIndex
-     * @param length
-     */
     private void adjustHeap(int adjustIndex, int length) {
+        
         int temp = arr[adjustIndex];
-        int leftChildIndex = 2 * adjustIndex + 1;
-        for(int k=leftChildIndex; k<length; k=2*k+1) {
-            int rightChildIndex = leftChildIndex + 1;
+        int leftChindIndex = adjustIndex * 2 + 1;
+        
+        for(int k=leftChindIndex; k<length; k=2*k+1) {
+            int rightChildIndex = leftChindIndex + 1;
             
-            if(rightChildIndex < length && arr[rightChildIndex] > arr[leftChildIndex]) {
+            if(rightChildIndex < length && arr[rightChildIndex] > arr[leftChindIndex]) {
                 k = rightChildIndex;
             }
             
@@ -142,101 +141,35 @@ class Heapsort0504 {
                 break;
             }
             
-            leftChildIndex = 2 * adjustIndex + 1;
+            leftChindIndex = adjustIndex * 2 + 1;
         }
         
         arr[adjustIndex] = temp;
     }
     
-    /**
-     * 
-     * @param swapIndex1
-     * @param swapIndex2
-     */
-    private void swap(int swapIndex1, int swapIndex2) {
-        int temp = arr[swapIndex1];
-        arr[swapIndex1] = arr[swapIndex2];
-        arr[swapIndex2] = temp;
+    private void swap(int index_1, int index_2) {
+        int temp = arr[index_1];
+        arr[index_1] = arr[index_2];
+        arr[index_2] = temp;
     }
 }
 
 /**
- * topn
+ * 
  * <p>Description:</p>
  * @author hansen.wang
- * @date 2018年5月4日 上午10:09:13
+ * @date 2018年5月11日 上午9:06:49
  */
-class Topn0504 {
+class KLargest0510 {
     
-    private int[] arr;
-    private int n;
-    
-    public Topn0504(int[] arrArgs, int nArgs) {
-        this.arr = arrArgs;
-        this.n = nArgs;
-    }
-    
-    public int[] topn() {
-        int[] topnArr = new int[n];
-        System.arraycopy(arr, 0, topnArr, 0, n);
-        doAdjust(topnArr);
-        
-        for(int i=n; i<arr.length; i++) {
-            if(arr[i] > topnArr[0]) {
-                topnArr[0] = arr[i];
-                doAdjust(topnArr);
-            }
-        }
-        
-        return topnArr;
-    }
-    
-    private void doAdjust(int[] adjustArr) {
-        int adjustIndex = adjustArr.length / 2 - 1;
-        for(int i=adjustIndex; i>=0; i--) {
-            adjustHeap(adjustArr, i, adjustArr.length);
-        }
-    }
-    
-    private void adjustHeap(int[] adjustArr, int adjustIndex, int length) {
-        int temp = adjustArr[adjustIndex];
-        int leftChildIndex = 2 * adjustIndex + 1;
-        for(int k=leftChildIndex; k<length; k=2*k+1) {
-            int rightChildIndex = leftChildIndex + 1;
-            if(rightChildIndex < length && adjustArr[rightChildIndex] < adjustArr[leftChildIndex]) {
-                k = rightChildIndex;
-            }
-            
-            if(adjustArr[k] < temp) {
-                adjustArr[adjustIndex] = adjustArr[k];
-                adjustIndex = k;
-            } else {
-                break;
-            }
-            
-            leftChildIndex = 2 * adjustIndex + 1;
-        }
-        
-        adjustArr[adjustIndex] = temp;
-    }
-}
-
-/**
- * 第K大元素
- * <p>Description:</p>
- * @author hansen.wang
- * @date 2018年5月4日 上午10:09:19
- */
-class KLargest0504 {
-    
-    //快排阈值
+    //快排的阈值
     private static final int FASTSORT_THRESHOLD = 10;
     
     private int[] arr;
     private int k;
     private int kIndex;
     
-    public KLargest0504(int[] arrArgs, int kArgs) {
+    public KLargest0510(int[] arrArgs, int kArgs) {
         this.arr = arrArgs;
         this.k = kArgs;
         this.kIndex = this.k - 1;
@@ -247,7 +180,7 @@ class KLargest0504 {
     }
     
     private int halfFastsort(int fromIndex, int endIndex) {
-        if(endIndex - fromIndex < FASTSORT_THRESHOLD) {
+        if(endIndex - fromIndex <= FASTSORT_THRESHOLD) {
             fastsort(fromIndex, endIndex);
             return arr[kIndex];
         }
@@ -274,12 +207,12 @@ class KLargest0504 {
             
             if(i < j) {
                 arr[baseIndex] = arr[i];
-                baseIndex = i;
+                baseIndex = i; 
             }
         }
         
         arr[baseIndex] = base;
-        if(baseIndex == kIndex) {
+        if(kIndex == baseIndex) {
             return base;
         } else if(baseIndex > kIndex) { //左半边
             return halfFastsort(fromIndex, baseIndex-1);
@@ -288,18 +221,14 @@ class KLargest0504 {
         }
     }
     
-    /**
-     * 从大到小排序
-     * @param fromIndex
-     * @param endIndex
-     */
     private void fastsort(int fromIndex, int endIndex) {
+        
         if(fromIndex < endIndex) {
             int i = fromIndex;
             int j = endIndex;
-            
             int baseIndex = i;
             int base = arr[baseIndex];
+            
             while(i < j) {
                 while(i < j && arr[j] < base) {
                     j--;
@@ -324,5 +253,78 @@ class KLargest0504 {
             fastsort(fromIndex, baseIndex-1);
             fastsort(baseIndex+1, endIndex);
         }
+    }
+}
+
+/**
+ * 
+ * <p>Description:</p>
+ * @author hansen.wang
+ * @date 2018年5月11日 上午9:31:02
+ */
+class Topn0510 {
+    
+    private int[] arr;
+    private int n;
+    
+    public Topn0510(int[] arrArgs, int nArgs) {
+        this.arr = arrArgs;
+        this.n = nArgs;
+    }
+    
+    public int[] topn() {
+        int[] ret = new int[n];
+        System.arraycopy(arr, 0, ret, 0, n);
+        doAjust(ret);
+        
+        for(int i=n; i<arr.length; i++) {
+            if(arr[i] > ret[0]) {
+                ret[0] = arr[i];
+                doAjust(ret);
+            }
+        }
+        
+        return ret;
+    }
+    
+    /**
+     * 
+     * @param arr
+     */
+    private void doAjust(int[] arr) {
+        int length = arr.length;
+        int adjustIndex = length / 2 - 1;
+        for(int i = adjustIndex; i>=0; i--) {
+            adjustHeap(arr, i, length);
+        }
+    }
+    
+    /**
+     * 
+     * @param arr
+     * @param adjustIndex
+     * @param length
+     */
+    private void adjustHeap(int[] arr, int adjustIndex, int length) {
+        int temp = arr[adjustIndex];
+        
+        int leftChildIndex = adjustIndex * 2 + 1;
+        for(int k=leftChildIndex; k<length; k=2*k+1) {
+            int rightChildIndex = leftChildIndex + 1;
+            if(rightChildIndex < length && arr[leftChildIndex] > arr[rightChildIndex]) {
+                k = rightChildIndex;
+            }
+            
+            if(arr[k] < temp) {
+                arr[adjustIndex] = arr[k];
+                adjustIndex = k;
+            } else {
+                break;
+            }
+            
+            leftChildIndex = adjustIndex * 2 + 1;
+        }
+        
+        arr[adjustIndex] = temp;
     }
 }
