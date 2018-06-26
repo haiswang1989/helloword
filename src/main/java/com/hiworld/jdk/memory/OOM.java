@@ -1,12 +1,14 @@
 package com.hiworld.jdk.memory;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 创建的线程太多,会抛出如下错误
  * Exception in thread "main" java.lang.OutOfMemoryError: unable to create new native thread
+ * 
+ * -Xss指定的是Java线程的"栈"的大小,线程的栈空间不再-Xmx指定的内存中,用的是OS的内存,当OS的内存不够的时候会导致这样的异常
+ * 
  * <p>Description:</p>
  * @author hansen.wang
  * @date 2017年6月28日 上午10:17:24
@@ -14,43 +16,17 @@ import java.util.List;
 public class OOM {
 
     public static void main(String[] args) {
-        int threadCount = Integer.parseInt(args[0]);
-        double xmxG = Double.parseDouble(args[1]);
         
-        System.out.println("threadCount : " + threadCount);
-        System.out.println("Get memory G : " + xmxG);
+        int newThreadCnt = Integer.parseInt(args[0]);
         
-        int getMemoryCount = (int)(xmxG * 1024 / 4);
-        List<byte[]> memory = new LinkedList<>();
-        for(int i=0; i<getMemoryCount; ++i) {
-            memory.add(allocateMemory4M());
-        }
-        
-        List<Thread> oomTheads = new ArrayList<>();
-        for(int i=0; i<threadCount; ++i) {
-            oomTheads.add(new Thread(new OOMThread(i)));
-        }
-        
-        for (Thread oomThead : oomTheads) {
-            try {
-                Thread.sleep(20l);
-            } catch (InterruptedException e) {
-            }
-            oomThead.start();
-        }
-        
-        try {
-            for (Thread oomThead : oomTheads) {
-                oomThead.join();
-            }
-        } catch (InterruptedException e) {
+        ArrayList<Thread> allThreads = new ArrayList<>();
+        for(int i=0; i<newThreadCnt; i++) {
+            Thread runningThread = new Thread(new OOMThread());
+            runningThread.start();
+            allThreads.add(runningThread);
         }
         
         System.out.println("over...");
-    }
-    
-    public static byte[] allocateMemory4M() {
-        return new byte[4 * 1024 * 1024];
     }
 }
 
@@ -64,30 +40,23 @@ public class OOM {
  */
 class OOMThread implements Runnable {
     
-    private int threadId;
-    
-    public OOMThread(int threadId) {
-        this.threadId = threadId;
+    public OOMThread() {
     }
     
     @Override
     public void run() {
-        System.out.println("threadId : " + threadId + " created...");
-        add(0);
+        useStack(0);
     }
     
-    /**
-     * 使用递归,让线程将-Xss占满
-     * @param count
-     */
-    public void add(int count) {
-        if(count == 12000) {
-            try {
-                Thread.sleep(10000000l);
-            } catch (InterruptedException e) {
-            }
+    public void useStack(int count) {
+        if(count < 5000) {
+            useStack(++count);
         } else {
-            add(count+1);
+            try {
+                TimeUnit.SECONDS.sleep(1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 } 

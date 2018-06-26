@@ -15,10 +15,15 @@ public class GuavaRateLimiter {
     public static void main(String[] args) {
         
         //限流,每秒1000个令牌
-        RateLimiter rateLimiter = RateLimiter.create(1000.0); 
+        RateLimiter rateLimiter = RateLimiter.create(1000.0);
+        int cnt = 0;
         while(true) {
             //判断是否拿到令牌
             boolean allow = rateLimiter.tryAcquire();
+            cnt++;
+            if(allow) {
+                System.out.println(cnt);
+            }
         }
     }
 }

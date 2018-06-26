@@ -2,6 +2,13 @@ package com.hiworld.jdk.collection;
 
 import java.util.concurrent.SynchronousQueue;
 
+/**
+ * 
+ * 
+ * <p>Description:</p>
+ * @author hansen.wang
+ * @date 2018年5月24日 上午10:41:05
+ */
 public class SynchronousQueueSource {
 
     public static void main(String[] args) {

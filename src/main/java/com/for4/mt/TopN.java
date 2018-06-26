@@ -28,7 +28,6 @@ public class TopN {
 //        TopNMaxByHeap topnMaxByHeap = new TopNMaxByHeap(inputs, topn);
 //        int[] topnArr = topnMaxByHeap.topn();
 //        System.out.println(Arrays.toString(topnArr));
-        
         TopNMinByHeap topnMinByHeap = new TopNMinByHeap(inputs, topn);
         int[] topnArr = topnMinByHeap.topn();
         System.out.println(Arrays.toString(topnArr));
